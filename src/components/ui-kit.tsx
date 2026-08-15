@@ -28,7 +28,11 @@ export function CtaLink({
   }[variant];
 
   return (
-    <Link to={to} hash={hash} className={cn(base, styles, className)}>
+    <Link
+      to={to}
+      {...(hash ? { hash } : {})}
+      className={cn(base, styles, className)}
+    >
       {children}
       <ArrowRight size={16} weight="bold" />
     </Link>
