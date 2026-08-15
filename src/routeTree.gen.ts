@@ -14,6 +14,7 @@ import { Route as ExpertiseRouteImport } from './routes/expertise'
 import { Route as CaseStudiesIndexRouteImport } from './routes/case-studies.index'
 import { Route as CaseStudiesSlugRouteImport } from './routes/case-studies.$slug'
 import { Route as InsightsIndexRouteImport } from './routes/insights.index'
+import { Route as InsightsSlugRouteImport } from './routes/insights.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,11 +41,17 @@ const InsightsIndexRoute = InsightsIndexRouteImport.update({
   path: '/insights/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InsightsSlugRoute = InsightsSlugRouteImport.update({
+  id: '/insights/$slug',
+  path: '/insights/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/expertise': typeof ExpertiseRoute
   '/case-studies/$slug': typeof CaseStudiesSlugRoute
+  '/insights/$slug': typeof InsightsSlugRoute
   '/case-studies/': typeof CaseStudiesIndexRoute
   '/insights/': typeof InsightsIndexRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/expertise': typeof ExpertiseRoute
   '/case-studies/$slug': typeof CaseStudiesSlugRoute
+  '/insights/$slug': typeof InsightsSlugRoute
   '/case-studies': typeof CaseStudiesIndexRoute
   '/insights': typeof InsightsIndexRoute
 }
@@ -60,20 +68,33 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/expertise': typeof ExpertiseRoute
   '/case-studies/$slug': typeof CaseStudiesSlugRoute
+  '/insights/$slug': typeof InsightsSlugRoute
   '/case-studies/': typeof CaseStudiesIndexRoute
   '/insights/': typeof InsightsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/expertise' | '/case-studies/$slug' | '/case-studies/' | '/insights/'
+    | '/'
+    | '/expertise'
+    | '/case-studies/$slug'
+    | '/insights/$slug'
+    | '/case-studies/'
+    | '/insights/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/expertise' | '/case-studies/$slug' | '/case-studies' | '/insights'
+  to:
+    | '/'
+    | '/expertise'
+    | '/case-studies/$slug'
+    | '/insights/$slug'
+    | '/case-studies'
+    | '/insights'
   id:
     | '__root__'
     | '/'
     | '/expertise'
     | '/case-studies/$slug'
+    | '/insights/$slug'
     | '/case-studies/'
     | '/insights/'
   fileRoutesById: FileRoutesById
@@ -82,6 +103,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ExpertiseRoute: typeof ExpertiseRoute
   CaseStudiesSlugRoute: typeof CaseStudiesSlugRoute
+  InsightsSlugRoute: typeof InsightsSlugRoute
   CaseStudiesIndexRoute: typeof CaseStudiesIndexRoute
   InsightsIndexRoute: typeof InsightsIndexRoute
 }
@@ -123,6 +145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InsightsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/insights/$slug': {
+      id: '/insights/$slug'
+      path: '/insights/$slug'
+      fullPath: '/insights/$slug'
+      preLoaderRoute: typeof InsightsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -130,6 +159,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ExpertiseRoute: ExpertiseRoute,
   CaseStudiesSlugRoute: CaseStudiesSlugRoute,
+  InsightsSlugRoute: InsightsSlugRoute,
   CaseStudiesIndexRoute: CaseStudiesIndexRoute,
   InsightsIndexRoute: InsightsIndexRoute,
 }
