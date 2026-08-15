@@ -34,8 +34,12 @@ export function Reveal({
   return (
     <Tag
       ref={ref as never}
-      style={{ transitionDelay: `${delay}ms` }}
-      className={cn("reveal", shown && "reveal-in", className)}
+      style={{
+        transitionDelay: `${delay}ms`,
+        opacity: shown ? 1 : 0,
+        transform: shown ? "none" : "translateY(18px)",
+      }}
+      className={cn("reveal", className)}
     >
       {children}
     </Tag>
