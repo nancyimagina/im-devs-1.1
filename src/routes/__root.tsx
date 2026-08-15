@@ -77,11 +77,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Imagina Devs — Nearshore Engineering Teams" },
+      {
+        name: "description",
+        content: "Senior engineering talent and software expertise, aligned with your team.",
+      },
+      { name: "author", content: "Imagina Devs" },
+      { property: "og:title", content: "Imagina Devs — Nearshore Engineering Teams" },
+      {
+        property: "og:description",
+        content: "Senior engineering talent and software expertise, aligned with your team.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
