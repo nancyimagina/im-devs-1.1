@@ -103,7 +103,7 @@ function Hero() {
                 </button>
               ))}
             </div>
-            <div key={active.id} className="reveal reveal-in mt-5">
+            <div key={active.id} className="mt-5 animate-in fade-in slide-in-from-bottom-2 duration-500">
               <p className="text-xl font-medium tracking-tight md:text-2xl">
                 {active.headline}
               </p>
