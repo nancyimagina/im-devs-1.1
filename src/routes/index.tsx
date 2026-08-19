@@ -18,6 +18,13 @@ import { Reveal } from "@/components/Reveal";
 import { CtaLink, TextLink } from "@/components/ui-kit";
 import { caseStudies } from "@/data/caseStudies";
 import { posts } from "@/data/posts";
+import logoRenuity from "@/assets/logos/logo-renuity.png.asset.json";
+import logoAgione from "@/assets/logos/logo-agione.png.asset.json";
+import logoBbva from "@/assets/logos/logo-BBVA.png.asset.json";
+import logoNutresa from "@/assets/logos/logo-Nutresa.png.asset.json";
+import logoBimbo from "@/assets/logos/logo-bimbo.png.asset.json";
+import logoDane from "@/assets/logos/logo-dane.png.asset.json";
+import logoAmazonia from "@/assets/logos/logo-amazonia.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
