@@ -81,49 +81,44 @@ function Hero() {
   return (
     <section className="section-deep grain relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 opacity-90">
-        <div className="absolute inset-0 md:left-1/3">
+        <div className="absolute inset-0 md:left-[30%]">
           <ParticleNetwork mode={active.id} />
         </div>
       </div>
 
       <div className="shell relative grid min-h-[92vh] items-center pt-32 pb-20 md:pt-36">
         <div className="max-w-2xl">
-          <p className="eyebrow">Nearshore engineering</p>
-          <h1 className="display mt-6 text-[2.6rem] leading-[1.03] sm:text-6xl lg:text-7xl">
-            Nearshore engineering teams for U.S. companies.
-          </h1>
-          <p className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">
-            Senior engineering talent and software expertise, aligned with your team.
-          </p>
+          <div key={active.id} className="animate-in fade-in slide-in-from-bottom-3 fill-mode-both duration-700">
+            <p className="eyebrow">{active.eyebrow}</p>
+            <h1 className="display mt-6 text-[2.6rem] leading-[1.03] sm:text-6xl lg:text-7xl">
+              {active.title}
+            </h1>
+            <p className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">
+              {active.text}
+            </p>
+          </div>
 
-          <div className="mt-10 max-w-lg rounded-2xl glass p-6">
-            <div className="flex gap-2">
-              {services.map((s, i) => (
-                <button
-                  key={s.id}
-                  type="button"
-                  onClick={() => setIndex(i)}
-                  className={`rounded-full px-3.5 py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.14em] transition-colors ${
-                    i === index
-                      ? "bg-accent text-accent-foreground"
-                      : "text-foreground/55 hover:text-foreground"
-                  }`}
-                >
-                  {s.label}
-                </button>
-              ))}
-            </div>
-            <div key={active.id} className="mt-5 animate-in fade-in slide-in-from-bottom-2 duration-500">
-              <p className="text-xl font-medium tracking-tight md:text-2xl">
-                {active.headline}
-              </p>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {active.copy}
-              </p>
-              <div className="mt-6">
-                <CtaLink to="/contact">{active.cta}</CtaLink>
-              </div>
-            </div>
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            <CtaLink to="/contact">Talk to us</CtaLink>
+            <CtaLink to="/expertise" variant="secondary">
+              Explore services
+            </CtaLink>
+          </div>
+
+          <div className="mt-12 flex items-center gap-3">
+            {services.map((s, i) => (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => setIndex(i)}
+                className={`h-2.5 rounded-full transition-all ${
+                  i === index
+                    ? "w-10 bg-accent"
+                    : "w-2.5 bg-foreground/30 hover:bg-foreground/55"
+                }`}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
           </div>
         </div>
       </div>
