@@ -45,17 +45,27 @@ export const Route = createFileRoute("/")({
 const services = [
   {
     id: "staff" as NetworkMode,
-    label: "Staff Augmentation",
-    headline: "Scale your engineering team fast.",
-    copy: "Add experienced engineers who work directly with your team.",
-    cta: "Build your team",
+    eyebrow: "Staff augmentation",
+    title: (
+      <>
+        Scale your engineering
+        <br />
+        team fast
+      </>
+    ),
+    text: "Add experienced engineers who work directly with your team.",
   },
   {
     id: "salesforce" as NetworkMode,
-    label: "Salesforce Experts",
-    headline: "Specialized Salesforce engineering when you need it.",
-    copy: "Extend your Salesforce capabilities with experienced engineers.",
-    cta: "Talk to our experts",
+    eyebrow: "Salesforce experts",
+    title: (
+      <>
+        Specialized Salesforce
+        <br />
+        engineering when you need it fast
+      </>
+    ),
+    text: "Extend your Salesforce capabilities with experienced engineers.",
   },
 ];
 
