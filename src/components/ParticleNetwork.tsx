@@ -64,9 +64,10 @@ export function ParticleNetwork({ mode }: { mode: NetworkMode }) {
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const sets = {
-      staff: gearTargets(COUNT),
-      salesforce: cloudTargets(COUNT),
+      staff: nebulaTargets(COUNT, { arms: 3, twist: 2.4, spread: 0.42, flat: 0.14 }),
+      salesforce: nebulaTargets(COUNT, { arms: 2, twist: 3.4, spread: 0.46, flat: 0.2 }),
     };
+
 
     const particles: P[] = Array.from({ length: COUNT }, (_, i) => {
       const t = sets.staff[i]!;
