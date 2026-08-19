@@ -12,69 +12,44 @@ type P = {
   seed: number;
 };
 
-const COUNT = 260;
+const COUNT = 420;
 
-function gearProfile(radius: number, teeth: number, toothH: number, theta: number): number {
-  const t = (theta / (Math.PI * 2)) * teeth;
-  const frac = t - Math.floor(t);
-  let tooth = 0;
-  if (frac >= 0.25 && frac <= 0.75) {
-    tooth = 1;
-  } else if (frac >= 0.15 && frac < 0.25) {
-    tooth = (frac - 0.15) / 0.1;
-  } else if (frac > 0.75 && frac <= 0.85) {
-    tooth = 1 - (frac - 0.75) / 0.1;
-  }
-  return radius + toothH * tooth;
+function gauss(): number {
+  let u = 0;
+  let v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 
-function gearTargets(count: number): [number, number, number][] {
-  // Two interlocking gears — one large, one small.
+// Aesthetic nebula: a soft spiral haze with a dense luminous core.
+function nebulaTargets(
+  count: number,
+  opts: { arms: number; twist: number; spread: number; flat: number },
+): [number, number, number][] {
   const out: [number, number, number][] = [];
-  const large = { cx: -0.12, cy: 0.0, r: 0.28, teeth: 14, toothH: 0.05, hole: 0.07 };
-  const small = { cx: 0.3, cy: 0.05, r: 0.16, teeth: 9, toothH: 0.032, hole: 0.04 };
-
   for (let i = 0; i < count; i++) {
-    const isLarge = i < count * 0.62;
-    const gear = isLarge ? large : small;
-    const angle = Math.random() * Math.PI * 2;
-    let r = gearProfile(gear.r, gear.teeth, gear.toothH, angle);
-    r += (Math.random() - 0.5) * 0.028;
-    if (r < gear.hole) r = gear.hole + Math.random() * 0.04;
-
+    const core = Math.random() < 0.22;
+    if (core) {
+      const r = Math.pow(Math.random(), 1.8) * 0.16;
+      const a = Math.random() * Math.PI * 2;
+      out.push([Math.cos(a) * r, Math.sin(a) * r * 0.9, gauss() * 0.08]);
+      continue;
+    }
+    const arm = Math.floor(Math.random() * opts.arms);
+    const t = Math.pow(Math.random(), 0.7);
+    const radius = 0.12 + t * opts.spread;
+    const angle = (arm / opts.arms) * Math.PI * 2 + t * opts.twist;
+    const jitter = 0.055 + t * 0.09;
     out.push([
-      gear.cx + Math.cos(angle) * r,
-      gear.cy + Math.sin(angle) * r * 0.85,
-      (Math.random() - 0.5) * 0.18,
+      Math.cos(angle) * radius + gauss() * jitter,
+      Math.sin(angle) * radius * 0.72 + gauss() * jitter * 0.7,
+      gauss() * opts.flat,
     ]);
   }
   return out;
 }
 
-function cloudTargets(count: number): [number, number, number][] {
-  // Soft cloud built from overlapping puffs.
-  const out: [number, number, number][] = [];
-  const puffs = [
-    { cx: 0.0, cy: 0.04, r: 0.3 },
-    { cx: -0.24, cy: 0.08, r: 0.19 },
-    { cx: 0.24, cy: 0.08, r: 0.19 },
-    { cx: -0.1, cy: -0.13, r: 0.17 },
-    { cx: 0.12, cy: -0.11, r: 0.16 },
-    { cx: 0.0, cy: 0.18, r: 0.13 },
-  ];
-
-  for (let i = 0; i < count; i++) {
-    const puff = puffs[i % puffs.length]!;
-    const angle = Math.random() * Math.PI * 2;
-    const r = Math.sqrt(Math.random()) * puff.r;
-    out.push([
-      puff.cx + Math.cos(angle) * r,
-      puff.cy + Math.sin(angle) * r * 0.8,
-      (Math.random() - 0.5) * 0.24,
-    ]);
-  }
-  return out;
-}
 
 export function ParticleNetwork({ mode }: { mode: NetworkMode }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -89,9 +64,10 @@ export function ParticleNetwork({ mode }: { mode: NetworkMode }) {
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const sets = {
-      staff: gearTargets(COUNT),
-      salesforce: cloudTargets(COUNT),
+      staff: nebulaTargets(COUNT, { arms: 3, twist: 2.4, spread: 0.42, flat: 0.14 }),
+      salesforce: nebulaTargets(COUNT, { arms: 2, twist: 3.4, spread: 0.46, flat: 0.2 }),
     };
+
 
     const particles: P[] = Array.from({ length: COUNT }, (_, i) => {
       const t = sets.staff[i]!;
