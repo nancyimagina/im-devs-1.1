@@ -126,27 +126,39 @@ function Hero() {
   );
 }
 
+const clientLogos = [
+  { src: logoRenuity.url, alt: "Renuity" },
+  { src: logoAgione.url, alt: "AgiOne" },
+  { src: logoBbva.url, alt: "BBVA" },
+  { src: logoNutresa.url, alt: "Nutresa" },
+  { src: logoBimbo.url, alt: "Bimbo" },
+  { src: logoDane.url, alt: "DANE" },
+  { src: logoAmazonia.url, alt: "Amazonía" },
+];
+
 function Clients() {
   return (
     <section className="section-deep border-y border-border py-10">
-      <div className="shell flex flex-col items-center gap-6 md:flex-row md:justify-between">
-        <p className="eyebrow">Trusted by teams we build with</p>
-        <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-4">
-          {caseStudies.map((c) => (
-            <Link
-              key={c.slug}
-              to="/case-studies/$slug"
-              params={{ slug: c.slug }}
-              className="text-xl font-medium tracking-tight text-foreground/45 transition-colors hover:text-foreground"
-            >
-              {c.name}
-            </Link>
-          ))}
+      <div className="shell flex flex-col gap-6">
+        <p className="eyebrow text-center md:text-left">Trusted by teams we build with</p>
+        <div className="marquee-mask relative overflow-hidden">
+          <div className="flex w-max animate-[marquee_38s_linear_infinite] items-center gap-16 pr-16">
+            {[...clientLogos, ...clientLogos].map((logo, i) => (
+              <img
+                key={`${logo.alt}-${i}`}
+                src={logo.src}
+                alt={logo.alt}
+                loading="lazy"
+                className="h-8 w-auto shrink-0 opacity-55 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0 md:h-10"
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 }
+
 
 const proof = [
   { value: "8+ Years", label: "Long-term client partnership" },
