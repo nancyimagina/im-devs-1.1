@@ -14,53 +14,63 @@ type P = {
 
 const COUNT = 260;
 
-function distributedTargets(count: number): [number, number, number][] {
-  // Multiple clusters — a flexible, distributed team network.
-  const clusters = [
-    [-0.62, -0.18, 0.1],
-    [-0.12, 0.34, -0.28],
-    [0.42, -0.34, 0.22],
-    [0.68, 0.24, -0.12],
-    [0.02, -0.06, 0.34],
-  ];
+function gearProfile(radius: number, teeth: number, toothH: number, theta: number): number {
+  const t = (theta / (Math.PI * 2)) * teeth;
+  const frac = t - Math.floor(t);
+  let tooth = 0;
+  if (frac >= 0.25 && frac <= 0.75) {
+    tooth = 1;
+  } else if (frac >= 0.15 && frac < 0.25) {
+    tooth = (frac - 0.15) / 0.1;
+  } else if (frac > 0.75 && frac <= 0.85) {
+    tooth = 1 - (frac - 0.75) / 0.1;
+  }
+  return radius + toothH * tooth;
+}
+
+function gearTargets(count: number): [number, number, number][] {
+  // Two interlocking gears — one large, one small.
   const out: [number, number, number][] = [];
+  const large = { cx: -0.12, cy: 0.0, r: 0.28, teeth: 14, toothH: 0.05, hole: 0.07 };
+  const small = { cx: 0.3, cy: 0.05, r: 0.16, teeth: 9, toothH: 0.032, hole: 0.04 };
+
   for (let i = 0; i < count; i++) {
-    const c = clusters[i % clusters.length]!;
-    const r = 0.16 + Math.random() * 0.14;
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.acos(2 * Math.random() - 1);
+    const isLarge = i < count * 0.62;
+    const gear = isLarge ? large : small;
+    const angle = Math.random() * Math.PI * 2;
+    let r = gearProfile(gear.r, gear.teeth, gear.toothH, angle);
+    r += (Math.random() - 0.5) * 0.028;
+    if (r < gear.hole) r = gear.hole + Math.random() * 0.04;
+
     out.push([
-      c[0]! + r * Math.sin(phi) * Math.cos(theta),
-      c[1]! + r * Math.sin(phi) * Math.sin(theta) * 0.8,
-      c[2]! + r * Math.cos(phi),
+      gear.cx + Math.cos(angle) * r,
+      gear.cy + Math.sin(angle) * r * 0.85,
+      (Math.random() - 0.5) * 0.18,
     ]);
   }
   return out;
 }
 
-function structuredTargets(count: number): [number, number, number][] {
-  // Denser modular lattice with a central architecture.
+function cloudTargets(count: number): [number, number, number][] {
+  // Soft cloud built from overlapping puffs.
   const out: [number, number, number][] = [];
-  const cols = 9;
-  const rows = 7;
-  const layers = 3;
+  const puffs = [
+    { cx: 0.0, cy: 0.04, r: 0.3 },
+    { cx: -0.24, cy: 0.08, r: 0.19 },
+    { cx: 0.24, cy: 0.08, r: 0.19 },
+    { cx: -0.1, cy: -0.13, r: 0.17 },
+    { cx: 0.12, cy: -0.11, r: 0.16 },
+    { cx: 0.0, cy: 0.18, r: 0.13 },
+  ];
+
   for (let i = 0; i < count; i++) {
-    if (i % 5 === 0) {
-      // central core
-      const r = 0.1 + Math.random() * 0.16;
-      const a = Math.random() * Math.PI * 2;
-      out.push([Math.cos(a) * r, Math.sin(a) * r * 0.75, (Math.random() - 0.5) * 0.3]);
-      continue;
-    }
-    const idx = i % (cols * rows * layers);
-    const l = Math.floor(idx / (cols * rows));
-    const rest = idx % (cols * rows);
-    const cx = rest % cols;
-    const cy = Math.floor(rest / cols);
+    const puff = puffs[i % puffs.length]!;
+    const angle = Math.random() * Math.PI * 2;
+    const r = Math.sqrt(Math.random()) * puff.r;
     out.push([
-      (cx / (cols - 1) - 0.5) * 1.5,
-      (cy / (rows - 1) - 0.5) * 0.9,
-      (l / (layers - 1) - 0.5) * 0.55,
+      puff.cx + Math.cos(angle) * r,
+      puff.cy + Math.sin(angle) * r * 0.8,
+      (Math.random() - 0.5) * 0.24,
     ]);
   }
   return out;
