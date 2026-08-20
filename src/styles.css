@@ -178,15 +178,31 @@
 /* Surfaces ------------------------------------------------------------- */
 
 @utility glass {
-  background: color-mix(in oklab, var(--light) 6%, transparent);
-  backdrop-filter: blur(16px);
-  border: 1px solid color-mix(in oklab, var(--light) 12%, transparent);
+  background: color-mix(in oklab, var(--brand) 40%, transparent);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid color-mix(in oklab, var(--light) 10%, transparent);
 }
 
 @utility glass-dark {
   background: color-mix(in oklab, var(--brand) 8%, transparent);
   backdrop-filter: blur(14px);
   border: 1px solid color-mix(in oklab, var(--brand) 14%, transparent);
+}
+
+/* Light surface card: white with a very soft green shadow */
+@utility card-light {
+  background: #ffffff;
+  border: 1px solid color-mix(in oklab, var(--accent) 18%, transparent);
+  box-shadow: 0 18px 40px -28px color-mix(in oklab, var(--accent) 55%, transparent);
+  transition:
+    transform 0.4s var(--ease-brand),
+    box-shadow 0.4s var(--ease-brand),
+    border-color 0.4s var(--ease-brand);
+  &:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in oklab, var(--accent) 42%, transparent);
+    box-shadow: 0 26px 60px -30px color-mix(in oklab, var(--accent) 70%, transparent);
+  }
 }
 
 @utility lift {
