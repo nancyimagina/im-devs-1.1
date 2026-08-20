@@ -117,17 +117,17 @@ export function ParticleNetwork({ mode }: { mode: NetworkMode }) {
       const cos = Math.cos(rot);
       const sin = Math.sin(rot);
 
-      const pts: { x: number; y: number; s: number }[] = [];
+      const pts: { x: number; y: number; s: number; d: number }[] = [];
 
       for (const p of particles) {
-        const ease = reduce ? 1 : 0.045;
+        const ease = reduce ? 1 : 0.035;
         p.x += (p.tx - p.x) * ease;
         p.y += (p.ty - p.y) * ease;
         p.z += (p.tz - p.z) * ease;
 
-        const drift = reduce ? 0 : Math.sin(time * 1.4 + p.seed) * 0.012;
+        const drift = reduce ? 0 : Math.sin(time * 1.1 + p.seed) * 0.014;
         const x = p.x + drift;
-        const y = p.y + Math.cos(time * 1.1 + p.seed) * (reduce ? 0 : 0.01);
+        const y = p.y + Math.cos(time * 0.9 + p.seed) * (reduce ? 0 : 0.012);
         const z = p.z;
 
         const rx = x * cos - z * sin;
@@ -138,36 +138,39 @@ export function ParticleNetwork({ mode }: { mode: NetworkMode }) {
           x: w / 2 + rx * scale * persp,
           y: h / 2 + y * scale * persp,
           s: persp,
+          d: Math.hypot(x, y),
         });
       }
 
-      // connections
-      const linkDist = current === "salesforce" ? 62 : 78;
-      ctx.lineWidth = 1;
-      for (let i = 0; i < pts.length; i++) {
-        for (let j = i + 1; j < pts.length; j++) {
-          const a = pts[i]!;
-          const b = pts[j]!;
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const d2 = dx * dx + dy * dy;
-          if (d2 > linkDist * linkDist) continue;
-          const alpha = (1 - Math.sqrt(d2) / linkDist) * 0.28 * a.s;
-          ctx.strokeStyle = `rgba(146, 242, 82, ${alpha.toFixed(3)})`;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
-        }
+      // soft nebula haze
+      ctx.globalCompositeOperation = "lighter";
+      for (const p of pts) {
+        const core = Math.max(0, 1 - p.d / 0.55);
+        const haze = 10 + core * 22;
+        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, haze * p.s);
+        const green = 0.035 + core * 0.05;
+        g.addColorStop(0, `rgba(146, 242, 82, ${green.toFixed(3)})`);
+        g.addColorStop(1, "rgba(146, 242, 82, 0)");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, haze * p.s, 0, Math.PI * 2);
+        ctx.fill();
       }
 
       for (const p of pts) {
-        const r = 1.35 * p.s;
+        const core = Math.max(0, 1 - p.d / 0.6);
+        const r = (0.7 + core * 1.1) * p.s;
         ctx.beginPath();
         ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(234, 255, 228, ${(0.35 + p.s * 0.45).toFixed(3)})`;
+        const a = (0.22 + core * 0.5) * p.s;
+        ctx.fillStyle =
+          core > 0.55
+            ? `rgba(234, 255, 228, ${a.toFixed(3)})`
+            : `rgba(190, 250, 160, ${(a * 0.8).toFixed(3)})`;
         ctx.fill();
       }
+      ctx.globalCompositeOperation = "source-over";
+
 
       raf = requestAnimationFrame(render);
     };

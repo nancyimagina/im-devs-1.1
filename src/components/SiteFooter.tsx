@@ -6,6 +6,7 @@ import {
   TiktokLogo,
 } from "@phosphor-icons/react";
 import { navItems } from "./SiteHeader";
+import logoLight from "@/assets/logos/logo-im-devs-light.png.asset.json";
 
 const socials = [
   { label: "Instagram", href: "https://instagram.com", Icon: InstagramLogo },
@@ -19,10 +20,8 @@ export function SiteFooter() {
     <footer className="section-deep grain border-t border-border">
       <div className="shell grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr] md:py-20">
         <div className="max-w-sm">
-          <div className="flex items-center gap-2.5">
-            <span className="block h-2 w-2 rounded-full bg-accent" />
-            <span className="text-base font-medium tracking-tight">Imagina Devs</span>
-          </div>
+          <img src={logoLight.url} alt="Imagina Devs" className="h-8 w-auto" />
+
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
             Nearshore engineering for U.S. companies.
           </p>
