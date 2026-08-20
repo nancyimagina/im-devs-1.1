@@ -30,12 +30,10 @@ export function SiteHeader() {
       )}
     >
       <div className="shell flex h-16 items-center justify-between gap-6">
-        <Link to="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
-          <span className="block h-2 w-2 rounded-full bg-accent" />
-          <span className="text-[0.95rem] font-medium tracking-tight text-foreground">
-            Imagina Devs
-          </span>
+        <Link to="/" className="flex items-center" onClick={() => setOpen(false)}>
+          <img src={logoLight.url} alt="Imagina Devs" className="h-8 w-auto" />
         </Link>
+
 
         <nav className="hidden items-center gap-8 md:flex">
           {navItems.map((item) => (
