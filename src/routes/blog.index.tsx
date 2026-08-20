@@ -3,7 +3,7 @@ import { PageLayout, PageHero } from "@/components/PageLayout";
 import { Reveal } from "@/components/Reveal";
 import { posts } from "@/data/posts";
 
-export const Route = createFileRoute("/insights/")({
+export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
       { title: "Insights — Engineering Teams & Software Delivery | Imagina Devs" },
@@ -37,7 +37,7 @@ function InsightsIndex() {
           {posts.map((p, i) => (
             <Reveal key={p.slug} delay={i * 70}>
               <Link
-                to="/insights/$slug"
+                to="/blog/$slug"
                 params={{ slug: p.slug }}
                 className="arrow-move group grid gap-4 py-8 md:grid-cols-[10rem_1fr_auto] md:items-baseline md:gap-10"
               >

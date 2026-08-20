@@ -22,34 +22,28 @@ function gauss(): number {
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 
-// Aesthetic nebula: a soft spiral haze with a dense luminous core.
-function nebulaTargets(
+// Distributed 3D node cloud (v1 network look).
+function networkTargets(
   count: number,
-  opts: { arms: number; twist: number; spread: number; flat: number },
+  opts: { radius: number; clusters: number; flat: number },
 ): [number, number, number][] {
   const out: [number, number, number][] = [];
+  const centers = Array.from({ length: opts.clusters }, () => {
+    const a = Math.random() * Math.PI * 2;
+    const r = Math.random() * opts.radius * 0.6;
+    return [Math.cos(a) * r, Math.sin(a) * r * 0.75, gauss() * opts.flat] as const;
+  });
   for (let i = 0; i < count; i++) {
-    const core = Math.random() < 0.22;
-    if (core) {
-      const r = Math.pow(Math.random(), 1.8) * 0.16;
-      const a = Math.random() * Math.PI * 2;
-      out.push([Math.cos(a) * r, Math.sin(a) * r * 0.9, gauss() * 0.08]);
-      continue;
-    }
-    const arm = Math.floor(Math.random() * opts.arms);
-    const t = Math.pow(Math.random(), 0.7);
-    const radius = 0.12 + t * opts.spread;
-    const angle = (arm / opts.arms) * Math.PI * 2 + t * opts.twist;
-    const jitter = 0.055 + t * 0.09;
+    const c = centers[i % centers.length]!;
+    const spread = opts.radius * 0.34;
     out.push([
-      Math.cos(angle) * radius + gauss() * jitter,
-      Math.sin(angle) * radius * 0.72 + gauss() * jitter * 0.7,
-      gauss() * opts.flat,
+      c[0] + gauss() * spread,
+      c[1] + gauss() * spread * 0.8,
+      c[2] + gauss() * opts.flat,
     ]);
   }
   return out;
 }
-
 
 export function ParticleNetwork({ mode }: { mode: NetworkMode }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -64,8 +58,8 @@ export function ParticleNetwork({ mode }: { mode: NetworkMode }) {
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const sets = {
-      staff: nebulaTargets(COUNT, { arms: 3, twist: 2.4, spread: 0.42, flat: 0.14 }),
-      salesforce: nebulaTargets(COUNT, { arms: 2, twist: 3.4, spread: 0.46, flat: 0.2 }),
+      staff: networkTargets(COUNT, { radius: 0.72, clusters: 5, flat: 0.28 }),
+      salesforce: networkTargets(COUNT, { radius: 0.66, clusters: 8, flat: 0.22 }),
     };
 
 
@@ -117,17 +111,17 @@ export function ParticleNetwork({ mode }: { mode: NetworkMode }) {
       const cos = Math.cos(rot);
       const sin = Math.sin(rot);
 
-      const pts: { x: number; y: number; s: number; d: number }[] = [];
+      const pts: { x: number; y: number; s: number }[] = [];
 
       for (const p of particles) {
-        const ease = reduce ? 1 : 0.035;
+        const ease = reduce ? 1 : 0.045;
         p.x += (p.tx - p.x) * ease;
         p.y += (p.ty - p.y) * ease;
         p.z += (p.tz - p.z) * ease;
 
-        const drift = reduce ? 0 : Math.sin(time * 1.1 + p.seed) * 0.014;
+        const drift = reduce ? 0 : Math.sin(time * 1.4 + p.seed) * 0.012;
         const x = p.x + drift;
-        const y = p.y + Math.cos(time * 0.9 + p.seed) * (reduce ? 0 : 0.012);
+        const y = p.y + Math.cos(time * 1.1 + p.seed) * (reduce ? 0 : 0.01);
         const z = p.z;
 
         const rx = x * cos - z * sin;
@@ -138,39 +132,36 @@ export function ParticleNetwork({ mode }: { mode: NetworkMode }) {
           x: w / 2 + rx * scale * persp,
           y: h / 2 + y * scale * persp,
           s: persp,
-          d: Math.hypot(x, y),
         });
       }
 
-      // soft nebula haze
-      ctx.globalCompositeOperation = "lighter";
-      for (const p of pts) {
-        const core = Math.max(0, 1 - p.d / 0.55);
-        const haze = 10 + core * 22;
-        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, haze * p.s);
-        const green = 0.035 + core * 0.05;
-        g.addColorStop(0, `rgba(146, 242, 82, ${green.toFixed(3)})`);
-        g.addColorStop(1, "rgba(146, 242, 82, 0)");
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, haze * p.s, 0, Math.PI * 2);
-        ctx.fill();
+      // connections
+      const linkDist = current === "salesforce" ? 62 : 78;
+      ctx.lineWidth = 1;
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const a = pts[i]!;
+          const b = pts[j]!;
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 > linkDist * linkDist) continue;
+          const alpha = (1 - Math.sqrt(d2) / linkDist) * 0.28 * a.s;
+          ctx.strokeStyle = `rgba(146, 242, 82, ${alpha.toFixed(3)})`;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
       }
 
       for (const p of pts) {
-        const core = Math.max(0, 1 - p.d / 0.6);
-        const r = (0.7 + core * 1.1) * p.s;
+        const r = 1.35 * p.s;
         ctx.beginPath();
         ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-        const a = (0.22 + core * 0.5) * p.s;
-        ctx.fillStyle =
-          core > 0.55
-            ? `rgba(234, 255, 228, ${a.toFixed(3)})`
-            : `rgba(190, 250, 160, ${(a * 0.8).toFixed(3)})`;
+        ctx.fillStyle = `rgba(234, 255, 228, ${(0.35 + p.s * 0.45).toFixed(3)})`;
         ctx.fill();
       }
-      ctx.globalCompositeOperation = "source-over";
-
 
       raf = requestAnimationFrame(render);
     };
