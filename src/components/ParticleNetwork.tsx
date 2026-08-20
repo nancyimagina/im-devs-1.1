@@ -22,34 +22,28 @@ function gauss(): number {
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 
-// Aesthetic nebula: a soft spiral haze with a dense luminous core.
-function nebulaTargets(
+// Distributed 3D node cloud (v1 network look).
+function networkTargets(
   count: number,
-  opts: { arms: number; twist: number; spread: number; flat: number },
+  opts: { radius: number; clusters: number; flat: number },
 ): [number, number, number][] {
   const out: [number, number, number][] = [];
+  const centers = Array.from({ length: opts.clusters }, () => {
+    const a = Math.random() * Math.PI * 2;
+    const r = Math.random() * opts.radius * 0.6;
+    return [Math.cos(a) * r, Math.sin(a) * r * 0.75, gauss() * opts.flat] as const;
+  });
   for (let i = 0; i < count; i++) {
-    const core = Math.random() < 0.22;
-    if (core) {
-      const r = Math.pow(Math.random(), 1.8) * 0.16;
-      const a = Math.random() * Math.PI * 2;
-      out.push([Math.cos(a) * r, Math.sin(a) * r * 0.9, gauss() * 0.08]);
-      continue;
-    }
-    const arm = Math.floor(Math.random() * opts.arms);
-    const t = Math.pow(Math.random(), 0.7);
-    const radius = 0.12 + t * opts.spread;
-    const angle = (arm / opts.arms) * Math.PI * 2 + t * opts.twist;
-    const jitter = 0.055 + t * 0.09;
+    const c = centers[i % centers.length]!;
+    const spread = opts.radius * 0.34;
     out.push([
-      Math.cos(angle) * radius + gauss() * jitter,
-      Math.sin(angle) * radius * 0.72 + gauss() * jitter * 0.7,
-      gauss() * opts.flat,
+      c[0] + gauss() * spread,
+      c[1] + gauss() * spread * 0.8,
+      c[2] + gauss() * opts.flat,
     ]);
   }
   return out;
 }
-
 
 export function ParticleNetwork({ mode }: { mode: NetworkMode }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -64,8 +58,8 @@ export function ParticleNetwork({ mode }: { mode: NetworkMode }) {
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const sets = {
-      staff: nebulaTargets(COUNT, { arms: 3, twist: 2.4, spread: 0.42, flat: 0.14 }),
-      salesforce: nebulaTargets(COUNT, { arms: 2, twist: 3.4, spread: 0.46, flat: 0.2 }),
+      staff: networkTargets(COUNT, { radius: 0.72, clusters: 5, flat: 0.28 }),
+      salesforce: networkTargets(COUNT, { radius: 0.66, clusters: 8, flat: 0.22 }),
     };
 
 

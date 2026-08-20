@@ -38,7 +38,7 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-5 lg:gap-8 md:flex">
           {navItems.map((item) => (
             <Link
               key={item.to}
