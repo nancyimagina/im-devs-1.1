@@ -3,7 +3,7 @@ import { PageLayout } from "@/components/PageLayout";
 import { CtaLink, TextLink } from "@/components/ui-kit";
 import { posts, getPost } from "@/data/posts";
 
-export const Route = createFileRoute("/insights/$slug")({
+export const Route = createFileRoute("/blog/$slug")({
   loader: ({ params }) => {
     const post = getPost(params.slug);
     if (!post) throw notFound();
@@ -38,7 +38,7 @@ function ArticlePage() {
       <article>
         <section className="section-deep grain pt-32 pb-14 md:pt-40 md:pb-20">
           <div className="shell max-w-3xl">
-            <TextLink to="/insights">All insights</TextLink>
+            <TextLink to="/blog">All articles</TextLink>
             <p className="eyebrow mt-10">{post.topic}</p>
             <h1 className="display mt-5 text-3xl md:text-5xl">{post.title}</h1>
             <p className="mt-6 text-sm text-muted-foreground">{post.readingTime}</p>
@@ -94,7 +94,7 @@ function ArticlePage() {
               {more.map((p) => (
                 <TextLink
                   key={p.slug}
-                  to="/insights/$slug"
+                  to="/blog/$slug"
                   params={{ slug: p.slug }}
                   className="block text-base"
                 >
