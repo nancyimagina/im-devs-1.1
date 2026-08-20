@@ -6,6 +6,7 @@ import {
   TiktokLogo,
 } from "@phosphor-icons/react";
 import { navItems } from "./SiteHeader";
+import logoLight from "@/assets/logos/logo-im-devs-light.png.asset.json";
 
 const socials = [
   { label: "Instagram", href: "https://instagram.com", Icon: InstagramLogo },
