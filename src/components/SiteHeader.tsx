@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { List, X } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import logoLight from "@/assets/logos/logo-im-devs-light.png.asset.json";
 
 export const navItems = [
   { label: "Expertise", to: "/expertise" },
