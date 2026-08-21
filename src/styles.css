@@ -178,8 +178,8 @@
 /* Surfaces ------------------------------------------------------------- */
 
 @utility glass {
-  background: color-mix(in oklab, var(--brand) 40%, transparent);
-  backdrop-filter: blur(18px);
+  background: rgba(1, 25, 33, 0.85);
+  backdrop-filter: blur(18px) saturate(140%);
   border-bottom: 1px solid color-mix(in oklab, var(--light) 10%, transparent);
 }
 

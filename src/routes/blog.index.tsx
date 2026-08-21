@@ -2,55 +2,64 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageLayout, PageHero } from "@/components/PageLayout";
 import { Reveal } from "@/components/Reveal";
 import { posts } from "@/data/posts";
+import { postImage } from "@/data/images";
 
 export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
-      { title: "Insights — Engineering Teams & Software Delivery | Imagina Devs" },
+      { title: "Blog — Engineering Teams & Software Delivery | Imagina Devs" },
       {
         name: "description",
         content:
           "Practical perspectives on engineering teams, software delivery and scaling technology.",
       },
-      { property: "og:title", content: "Insights | Imagina Devs" },
+      { property: "og:title", content: "Blog | Imagina Devs" },
       {
         property: "og:description",
         content:
           "Practical perspectives on engineering teams, software delivery and scaling technology.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: InsightsIndex,
+  component: BlogIndex,
 });
 
-function InsightsIndex() {
+function BlogIndex() {
   return (
     <PageLayout>
       <PageHero
-        eyebrow="Insights"
-        title="Insights"
+        eyebrow="Blog"
+        title="Blog"
         intro="Practical perspectives on engineering teams, software delivery and scaling technology."
       />
 
-      <section className="section-deep py-16 md:py-24">
-        <div className="shell divide-y divide-border border-y border-border">
+      <section className="section-light grain py-16 md:py-24">
+        <div className="shell grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((p, i) => (
             <Reveal key={p.slug} delay={i * 70}>
               <Link
                 to="/blog/$slug"
                 params={{ slug: p.slug }}
-                className="arrow-move group grid gap-4 py-8 md:grid-cols-[10rem_1fr_auto] md:items-baseline md:gap-10"
+                className="card-light group flex h-full flex-col overflow-hidden rounded-2xl"
               >
-                <p className="eyebrow">{p.topic}</p>
-                <div>
-                  <h2 className="text-xl font-medium tracking-tight transition-colors group-hover:text-accent md:text-2xl">
+                <img
+                  src={postImage(p.slug)}
+                  alt={p.title}
+                  width={1200}
+                  height={800}
+                  loading="lazy"
+                  className="h-44 w-full object-cover"
+                />
+                <div className="flex flex-1 flex-col p-8">
+                  <p className="eyebrow-dark">{p.topic}</p>
+                  <h2 className="mt-4 text-lg font-medium leading-snug tracking-tight text-brand">
                     {p.title}
                   </h2>
-                  <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                    {p.excerpt}
-                  </p>
+                  <p className="mt-3 text-sm leading-relaxed text-brand/65">{p.excerpt}</p>
+                  <span className="mt-auto pt-6 text-xs text-brand/50">{p.readingTime}</span>
                 </div>
-                <span className="text-xs text-muted-foreground">{p.readingTime}</span>
               </Link>
             </Reveal>
           ))}

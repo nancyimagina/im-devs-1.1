@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageLayout, PageHero } from "@/components/PageLayout";
 import { Reveal } from "@/components/Reveal";
 import { caseStudies } from "@/data/caseStudies";
+import { caseImage } from "@/data/images";
 
 export const Route = createFileRoute("/case-studies/")({
   head: () => ({
@@ -39,27 +40,29 @@ function CaseStudiesIndex() {
               <Link
                 to="/case-studies/$slug"
                 params={{ slug: c.slug }}
-                className="lift group grid gap-8 rounded-2xl border border-brand/12 bg-brand p-8 text-light md:grid-cols-[1fr_1fr] md:p-12"
+                className="card-light group grid overflow-hidden rounded-2xl md:grid-cols-[1fr_1fr]"
               >
-                <div>
-                  <p className="eyebrow">{c.category}</p>
-                  <h2 className="display mt-6 text-3xl md:text-4xl">{c.name}</h2>
-                  <p className="mt-4 max-w-sm text-sm leading-relaxed text-light/65">
-                    {c.summary}
-                  </p>
-                  <p className="mt-8 text-sm font-medium text-accent">
-                    See the full story →
-                  </p>
-                </div>
-                <div className="grid gap-6 self-center sm:grid-cols-3 md:border-l md:border-light/10 md:pl-10">
-                  {c.proof.map((p) => (
-                    <div key={p.label}>
-                      <p className="display text-2xl text-accent">{p.value}</p>
-                      <p className="mt-2 text-xs leading-relaxed text-light/60">
-                        {p.label}
-                      </p>
-                    </div>
-                  ))}
+                <img
+                  src={caseImage(c.slug)}
+                  alt={c.name}
+                  width={1200}
+                  height={800}
+                  loading="lazy"
+                  className="h-56 w-full object-cover md:h-full"
+                />
+                <div className="p-8 md:p-12">
+                  <p className="eyebrow-dark">{c.category}</p>
+                  <h2 className="display mt-5 text-3xl text-brand md:text-4xl">{c.name}</h2>
+                  <p className="mt-4 text-sm leading-relaxed text-brand/65">{c.summary}</p>
+                  <div className="mt-8 grid gap-6 border-t border-brand/10 pt-8 sm:grid-cols-3">
+                    {c.proof.map((p) => (
+                      <div key={p.label}>
+                        <p className="display text-2xl text-brand">{p.value}</p>
+                        <p className="mt-2 text-xs leading-relaxed text-brand/55">{p.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-8 text-sm font-medium text-brand">See the full story →</p>
                 </div>
               </Link>
             </Reveal>

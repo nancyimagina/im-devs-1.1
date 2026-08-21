@@ -2,19 +2,51 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { List, X } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import { useLang, type TKey } from "@/lib/i18n";
+import logoLight from "@/assets/logos/logo-im-devs-light.png.asset.json";
 
-export const navItems = [
-  { label: "Expertise", to: "/expertise" },
-  { label: "Case Studies", to: "/case-studies" },
-  { label: "Testimonials", to: "/testimonials" },
-  { label: "Blog", to: "/blog" },
-  { label: "About", to: "/about" },
-  { label: "Contact", to: "/contact" },
+export const navItems: { key: TKey; to: string }[] = [
+  { key: "nav.expertise", to: "/expertise" },
+  { key: "nav.caseStudies", to: "/case-studies" },
+  { key: "nav.testimonials", to: "/testimonials" },
+  { key: "nav.blog", to: "/blog" },
+  { key: "nav.about", to: "/about" },
+  { key: "nav.contact", to: "/contact" },
 ];
+
+function LanguageToggle({ className }: { className?: string }) {
+  const { lang, setLang } = useLang();
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-1 rounded-full border border-border px-1 py-1 text-xs",
+        className,
+      )}
+    >
+      {(["en", "es"] as const).map((l) => (
+        <button
+          key={l}
+          type="button"
+          onClick={() => setLang(l)}
+          aria-pressed={lang === l}
+          className={cn(
+            "rounded-full px-2.5 py-1 uppercase tracking-wide transition-colors",
+            lang === l
+              ? "bg-accent text-accent-foreground"
+              : "text-foreground/60 hover:text-foreground",
+          )}
+        >
+          {l}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const { t } = useLang();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -31,14 +63,17 @@ export function SiteHeader() {
       )}
     >
       <div className="shell flex h-16 items-center justify-between gap-6">
-        <Link to="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
-          <span className="block h-2 w-2 rounded-full bg-accent" />
-          <span className="text-[0.95rem] font-medium tracking-tight text-foreground">
-            Imagina Devs
-          </span>
+        <Link to="/" className="flex items-center" onClick={() => setOpen(false)}>
+          <img
+            src={logoLight.url}
+            alt="Imagina Devs"
+            width={160}
+            height={32}
+            className="h-7 w-auto md:h-8"
+          />
         </Link>
 
-        <nav className="hidden items-center gap-5 lg:gap-8 md:flex">
+        <nav className="hidden items-center gap-5 md:flex lg:gap-7">
           {navItems.map((item) => (
             <Link
               key={item.to}
@@ -47,17 +82,18 @@ export function SiteHeader() {
               activeOptions={{ exact: false }}
               className="text-sm text-foreground/70 transition-colors hover:text-foreground"
             >
-              {item.label}
+              {t(item.key)}
             </Link>
           ))}
         </nav>
 
         <div className="flex items-center gap-3">
+          <LanguageToggle className="hidden sm:flex" />
           <Link
             to="/contact"
-            className="hidden rounded-full bg-accent px-5 py-2 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90 sm:inline-flex"
+            className="hidden rounded-full bg-accent px-5 py-2 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90 lg:inline-flex"
           >
-            Build your team
+            {t("cta.buildTeam")}
           </Link>
           <button
             type="button"
@@ -80,9 +116,10 @@ export function SiteHeader() {
                 onClick={() => setOpen(false)}
                 className="rounded-md px-1 py-2.5 text-base text-foreground/80"
               >
-                {item.label}
+                {t(item.key)}
               </Link>
             ))}
+            <LanguageToggle className="mt-3 w-fit" />
           </div>
         </nav>
       )}
