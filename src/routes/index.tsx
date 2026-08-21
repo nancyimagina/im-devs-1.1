@@ -80,6 +80,7 @@ const services = [
 ];
 
 function Hero() {
+  const { t } = useLang();
   const [index, setIndex] = useState(0);
   const active = services[index]!;
 
@@ -109,9 +110,9 @@ function Hero() {
           </div>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
-            <CtaLink to="/contact">Talk to us</CtaLink>
+            <CtaLink to="/contact">{t("cta.talk")}</CtaLink>
             <CtaLink to="/expertise" variant="secondary">
-              Explore services
+              {t("cta.explore")}
             </CtaLink>
           </div>
 
@@ -147,10 +148,11 @@ const clientLogos = [
 ];
 
 function Clients() {
+  const { t } = useLang();
   return (
     <section className="section-deep border-y border-border py-10">
       <div className="shell flex flex-col gap-6">
-        <p className="eyebrow text-center md:text-left">Trusted by teams we build with</p>
+        <p className="eyebrow text-center md:text-left">{t("home.trusted")}</p>
         <div className="marquee-mask relative overflow-hidden">
           <div className="flex w-max animate-[marquee_38s_linear_infinite] items-center gap-16 pr-16">
             {[...clientLogos, ...clientLogos].map((logo, i) => (
@@ -255,9 +257,9 @@ function Home() {
           </div>
 
           <Reveal className="mt-24 max-w-2xl">
-            <p className="eyebrow-dark">What we do</p>
+            <p className="eyebrow-dark">{t("home.whatWeDo")}</p>
             <h2 className="display mt-5 text-3xl text-brand md:text-5xl">
-              Built for teams that need to move fast
+              {t("home.whatWeDoTitle")}
             </h2>
           </Reveal>
 
@@ -279,7 +281,7 @@ function Home() {
 
           <div className="mt-10">
             <TextLink to="/expertise" tone="brand">
-              Explore our expertise
+              {t("home.exploreExpertise")}
             </TextLink>
           </div>
         </div>
@@ -289,9 +291,9 @@ function Home() {
       <section className="section-deep grain py-24 md:py-32">
         <div className="shell">
           <Reveal className="max-w-2xl">
-            <p className="eyebrow">Industries & Expertise</p>
+            <p className="eyebrow">{t("home.industries")}</p>
             <h2 className="display mt-5 text-3xl md:text-5xl">
-              Expertise shaped by complex operations
+              {t("home.industriesTitle")}
             </h2>
             <p className="mt-5 text-base leading-relaxed text-muted-foreground">
               Technology expertise shaped by complex operations, real-world challenges and
@@ -314,7 +316,7 @@ function Home() {
           </div>
 
           <div className="mt-10">
-            <TextLink to="/expertise">Explore our expertise</TextLink>
+            <TextLink to="/expertise">{t("home.exploreExpertise")}</TextLink>
           </div>
         </div>
       </section>
@@ -323,9 +325,9 @@ function Home() {
       <section className="section-light grain py-24 md:py-32">
         <div className="shell">
           <Reveal className="max-w-2xl">
-            <p className="eyebrow-dark">Case studies</p>
+            <p className="eyebrow-dark">{t("home.caseStudies")}</p>
             <h2 className="display mt-5 text-3xl text-brand md:text-5xl">
-              Real impact for real clients
+              {t("home.caseStudiesTitle")}
             </h2>
             <p className="mt-5 text-base leading-relaxed text-brand/65">
               A few examples of how Imagina helps teams improve operations, modernize
@@ -364,7 +366,7 @@ function Home() {
 
           <div className="mt-10">
             <TextLink to="/case-studies" tone="brand">
-              View case studies
+              {t("home.viewCases")}
             </TextLink>
           </div>
         </div>
@@ -374,9 +376,9 @@ function Home() {
       <section className="section-deep grain border-t border-border py-24 md:py-32">
         <div className="shell grid gap-16 lg:grid-cols-[0.9fr_1.1fr]">
           <Reveal>
-            <p className="eyebrow">Why Imagina Devs</p>
+            <p className="eyebrow">{t("home.why")}</p>
             <h2 className="display mt-5 text-3xl md:text-5xl">
-              Your engineering team, extended.
+              {t("home.whyTitle")}
             </h2>
           </Reveal>
           <div className="grid gap-x-10 gap-y-10 sm:grid-cols-2">
@@ -397,9 +399,9 @@ function Home() {
       <section className="section-light grain py-24 md:py-32">
         <div className="shell grid gap-12 lg:grid-cols-2 lg:gap-20">
           <Reveal>
-            <p className="eyebrow-dark">About</p>
+            <p className="eyebrow-dark">{t("home.about")}</p>
             <h2 className="display mt-5 text-3xl text-brand md:text-5xl">
-              A tech partner that fits your team.
+              {t("home.aboutTitle")}
             </h2>
           </Reveal>
           <Reveal delay={100} className="max-w-lg">
@@ -414,7 +416,7 @@ function Home() {
             </p>
             <div className="mt-8">
               <TextLink to="/about" tone="brand">
-                More about Imagina
+                {t("home.moreAbout")}
               </TextLink>
             </div>
           </Reveal>
@@ -489,16 +491,15 @@ function Home() {
       <section className="section-deep grain py-24 md:py-32">
         <div className="shell max-w-3xl text-center">
           <Reveal>
-            <p className="eyebrow">Contact</p>
+            <p className="eyebrow">{t("home.contact")}</p>
             <h2 className="display mt-5 text-3xl md:text-5xl">
-              Ready to scale your engineering team?
+              {t("home.contactTitle")}
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
-              Tell us what you're building, what you're trying to solve, or where your team
-              needs support.
+              {t("home.contactText")}
             </p>
             <div className="mt-9 flex justify-center">
-              <CtaLink to="/contact">Let's talk</CtaLink>
+              <CtaLink to="/contact">{t("cta.letsTalk")}</CtaLink>
             </div>
           </Reveal>
         </div>
