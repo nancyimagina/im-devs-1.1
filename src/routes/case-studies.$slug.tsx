@@ -3,6 +3,7 @@ import { PageLayout } from "@/components/PageLayout";
 import { Reveal } from "@/components/Reveal";
 import { CtaLink, TextLink } from "@/components/ui-kit";
 import { caseStudies, getCaseStudy } from "@/data/caseStudies";
+import { caseImage } from "@/data/images";
 
 export const Route = createFileRoute("/case-studies/$slug")({
   loader: ({ params }) => {
@@ -43,6 +44,14 @@ function CaseStudyPage() {
           {study.relationship && (
             <p className="mt-6 text-sm text-muted-foreground">{study.relationship}</p>
           )}
+
+          <img
+            src={caseImage(study.slug)}
+            alt={study.name}
+            width={1200}
+            height={800}
+            className="mt-12 aspect-[16/9] w-full rounded-2xl object-cover"
+          />
 
           <div className="mt-16 grid gap-8 border-t border-border pt-10 sm:grid-cols-3">
             {study.proof.map((p, i) => (

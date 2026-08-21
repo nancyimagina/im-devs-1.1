@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { PageLayout } from "@/components/PageLayout";
 import { CtaLink, TextLink } from "@/components/ui-kit";
 import { posts, getPost } from "@/data/posts";
+import { postImage } from "@/data/images";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: ({ params }) => {
@@ -42,6 +43,15 @@ function ArticlePage() {
             <p className="eyebrow mt-10">{post.topic}</p>
             <h1 className="display mt-5 text-3xl md:text-5xl">{post.title}</h1>
             <p className="mt-6 text-sm text-muted-foreground">{post.readingTime}</p>
+          </div>
+          <div className="shell mt-12 max-w-4xl">
+            <img
+              src={postImage(post.slug)}
+              alt={post.title}
+              width={1200}
+              height={800}
+              className="aspect-[16/9] w-full rounded-2xl object-cover"
+            />
           </div>
         </section>
 
