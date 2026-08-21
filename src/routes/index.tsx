@@ -18,6 +18,9 @@ import { Reveal } from "@/components/Reveal";
 import { CtaLink, TextLink } from "@/components/ui-kit";
 import { caseStudies } from "@/data/caseStudies";
 import { posts } from "@/data/posts";
+import { caseImage, postImage } from "@/data/images";
+import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
+import { useLang } from "@/lib/i18n";
 import logoRenuity from "@/assets/logos/logo-renuity.png.asset.json";
 import logoAgione from "@/assets/logos/logo-agione.png.asset.json";
 import logoBbva from "@/assets/logos/logo-BBVA.png.asset.json";
@@ -233,6 +236,7 @@ const why = [
 ];
 
 function Home() {
+  const { t } = useLang();
   return (
     <PageLayout>
       <Hero />
@@ -335,16 +339,24 @@ function Home() {
                 <Link
                   to="/case-studies/$slug"
                   params={{ slug: c.slug }}
-                  className="lift group block h-full rounded-2xl border border-brand/12 bg-brand p-8 text-light md:p-10"
+                  className="card-light group flex h-full flex-col overflow-hidden rounded-2xl"
                 >
-                  <p className="eyebrow">{c.category}</p>
-                  <h3 className="display mt-6 text-2xl md:text-3xl">{c.name}</h3>
-                  <p className="mt-3 max-w-sm text-sm leading-relaxed text-light/65">
-                    {c.summary}
-                  </p>
-                  <p className="mt-8 text-sm font-medium text-accent">
-                    See the full story →
-                  </p>
+                  <img
+                    src={caseImage(c.slug)}
+                    alt={c.name}
+                    width={1200}
+                    height={800}
+                    loading="lazy"
+                    className="h-52 w-full object-cover"
+                  />
+                  <div className="flex flex-1 flex-col p-8 md:p-10">
+                    <p className="eyebrow-dark">{c.category}</p>
+                    <h3 className="display mt-5 text-2xl text-brand md:text-3xl">{c.name}</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-brand/65">{c.summary}</p>
+                    <p className="mt-auto pt-8 text-sm font-medium text-brand">
+                      {t("common.seeStory")}
+                    </p>
+                  </div>
                 </Link>
               </Reveal>
             ))}
@@ -354,44 +366,6 @@ function Home() {
             <TextLink to="/case-studies" tone="brand">
               View case studies
             </TextLink>
-          </div>
-        </div>
-      </section>
-
-      {/* Insights */}
-      <section className="section-deep py-24 md:py-32">
-        <div className="shell">
-          <Reveal className="flex flex-wrap items-end justify-between gap-6">
-            <div className="max-w-xl">
-              <p className="eyebrow">Insights</p>
-              <h2 className="display mt-5 text-3xl md:text-4xl">
-                Practical perspectives on engineering teams
-              </h2>
-            </div>
-            <TextLink to="/insights">Read insights</TextLink>
-          </Reveal>
-
-          <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-3">
-            {posts.slice(0, 3).map((p, i) => (
-              <Reveal key={p.slug} delay={i * 90}>
-                <Link
-                  to="/insights/$slug"
-                  params={{ slug: p.slug }}
-                  className="flex h-full flex-col bg-background p-8 transition-colors hover:bg-card"
-                >
-                  <p className="eyebrow">{p.topic}</p>
-                  <h3 className="mt-5 text-lg font-medium leading-snug tracking-tight">
-                    {p.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                    {p.excerpt}
-                  </p>
-                  <span className="mt-auto pt-6 text-xs text-muted-foreground">
-                    {p.readingTime}
-                  </span>
-                </Link>
-              </Reveal>
-            ))}
           </div>
         </div>
       </section>
@@ -444,6 +418,70 @@ function Home() {
               </TextLink>
             </div>
           </Reveal>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="section-light grain py-24 md:py-32">
+        <div className="shell">
+          <Reveal className="max-w-2xl">
+            <p className="eyebrow-dark">{t("home.testimonials")}</p>
+            <h2 className="display mt-5 text-3xl text-brand md:text-5xl">
+              {t("home.testimonialsTitle")}
+            </h2>
+          </Reveal>
+          <TestimonialsCarousel />
+          <div className="mt-10">
+            <TextLink to="/testimonials" tone="brand">
+              {t("home.allTestimonials")}
+            </TextLink>
+          </div>
+        </div>
+      </section>
+
+      {/* Blog */}
+      <section className="section-deep grain py-24 md:py-32">
+        <div className="shell">
+          <Reveal className="flex flex-wrap items-end justify-between gap-6">
+            <div className="max-w-xl">
+              <p className="eyebrow">{t("home.blog")}</p>
+              <h2 className="display mt-5 text-3xl md:text-4xl">{t("home.blogTitle")}</h2>
+            </div>
+            <TextLink to="/blog">{t("home.readBlog")}</TextLink>
+          </Reveal>
+
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            {posts.slice(0, 3).map((p, i) => (
+              <Reveal key={p.slug} delay={i * 90}>
+                <Link
+                  to="/blog/$slug"
+                  params={{ slug: p.slug }}
+                  className="lift flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card"
+                >
+                  <img
+                    src={postImage(p.slug)}
+                    alt={p.title}
+                    width={1200}
+                    height={800}
+                    loading="lazy"
+                    className="h-40 w-full object-cover"
+                  />
+                  <div className="flex flex-1 flex-col p-8">
+                    <p className="eyebrow">{p.topic}</p>
+                    <h3 className="mt-4 text-lg font-medium leading-snug tracking-tight">
+                      {p.title}
+                    </h3>
+                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                      {p.excerpt}
+                    </p>
+                    <span className="mt-auto pt-6 text-xs text-muted-foreground">
+                      {p.readingTime}
+                    </span>
+                  </div>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
